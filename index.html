@@ -14,15 +14,15 @@
   </style>
 </head>
 <body>
-  <h1>Children's Character Quiz</h1>
+  <h1 id="quizTitle">Children's Character Quiz</h1>
   <form id="quizForm">
-    <!-- Questions injected via JS -->
     <div id="quizContainer"></div>
     <button type="submit">Submit Answers</button>
   </form>
 
   <div id="result" class="hidden">
     <h2>Recommended Books</h2>
+    <p id="scoreDisplay"></p>
     <ul id="recommendationsList"></ul>
   </div>
 
@@ -48,7 +48,7 @@
       },
       {
         text: "How are complex everyday items, like pencils, usually made in the world?",
-        options: ["One expert creates everything from start to finish", "They are simple and don’t require teamwork", "They are created through cooperation and trade", "They require tight government control"],
+        options: ["One expert creates everything from start to finish", "They are simple and don't require teamwork", "They are created through cooperation and trade", "They require tight government control"],
         answer: 2,
         book: "Miraculous Pencil"
       },
@@ -72,19 +72,19 @@
       },
       {
         text: "Why is being open to learning more important than just having natural talent?",
-        options: ["Because talent disappears over time", "Because it allows growth from failure", "Because smart people don’t fail", "Because talent is overrated by society"],
+        options: ["Because talent disappears over time", "Because it allows growth from failure", "Because smart people don't fail", "Because talent is overrated by society"],
         answer: 1,
         book: "Sometimes You Win, Sometimes You Learn"
       },
       {
         text: "Why is forgiveness an important part of any friendship?",
-        options: ["It makes you look like the better person", "It lets you control the situation", "It helps relationships heal and grow", "It ensures you don’t lose your light"],
+        options: ["It makes you look like the better person", "It lets you control the situation", "It helps relationships heal and grow", "It ensures you don't lose your light"],
         answer: 2,
         book: "Lumi the Light Learns About Friendship"
       },
       {
         text: "What is a key reason why giving should be voluntary and not forced?",
-        options: ["It’s not allowed by law", "It teaches kids to be selfish", "It’s not real charity if it’s forced", "It leads to poverty"],
+        options: ["It's not allowed by law", "It teaches kids to be selfish", "It's not real charity if it's forced", "It leads to poverty"],
         answer: 2,
         book: "The Tuttle Twins Learn About the Law"
       }
@@ -94,6 +94,8 @@
     const container = document.getElementById('quizContainer');
     const resultDiv = document.getElementById('result');
     const recommendationsList = document.getElementById('recommendationsList');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const quizTitle = document.getElementById('quizTitle');
 
     questions.forEach((q, i) => {
       const div = document.createElement('div');
@@ -114,10 +116,13 @@
       e.preventDefault();
       const data = new FormData(form);
       const recommended = new Set();
+      let score = 0;
 
       questions.forEach((q, i) => {
         const userAnswer = parseInt(data.get(`q${i}`));
-        if (userAnswer !== q.answer) {
+        if (userAnswer === q.answer) {
+          score++;
+        } else {
           recommended.add(q.book);
         }
       });
@@ -126,6 +131,7 @@
       form.querySelector('button').classList.add('hidden');
       resultDiv.classList.remove('hidden');
       recommendationsList.innerHTML = "";
+      quizTitle.textContent = `Children's Character Quiz â€“ Score: ${score}/10`;
 
       if (recommended.size === 0) {
         recommendationsList.innerHTML = "<li>You got everything right! No additional reading needed.</li>";
@@ -140,4 +146,3 @@
   </script>
 </body>
 </html>
-
