@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Children's Character Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; max-width: 700px; margin: auto; }
+    h1, h2 { color: #444; }
+    .question { margin-bottom: 1.5rem; }
+    .hidden { display: none; }
+    .recommendations { margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Children's Character Quiz</h1>
+  <form id="quizForm">
+    <!-- Questions injected via JS -->
+    <div id="quizContainer"></div>
+    <button type="submit">Submit Answers</button>
+  </form>
+
+  <div id="result" class="hidden">
+    <h2>Recommended Books</h2>
+    <ul id="recommendationsList"></ul>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "What is one important way to build and keep strong friendships?",
+        options: ["Always being the center of attention", "Helping only when asked", "Being helpful, caring, and true to yourself", "Making sure others agree with you"],
+        answer: 2,
+        book: "Lumi the Light Learns About Friendship"
+      },
+      {
+        text: "What helps people keep going when they feel scared or discouraged?",
+        options: ["Believing everyone must agree with you", "Hope can grow even in hard times and is meant to be shared", "Ignoring problems until they go away", "Thinking that only adults understand hope"],
+        answer: 1,
+        book: "Lumi the Light Learns to Hope"
+      },
+      {
+        text: "What is a healthy way to let your unique abilities shine?",
+        options: ["By being louder than everyone else", "By comparing yourself to others", "By being brave, kind, and true to yourself", "By doing things alone and avoiding help"],
+        answer: 2,
+        book: "Lumi the Light Learns to Shine"
+      },
+      {
+        text: "How are complex everyday items, like pencils, usually made in the world?",
+        options: ["One expert creates everything from start to finish", "They are simple and don’t require teamwork", "They are created through cooperation and trade", "They require tight government control"],
+        answer: 2,
+        book: "Miraculous Pencil"
+      },
+      {
+        text: "When does a person truly fail in life?",
+        options: ["When they make too many mistakes", "When others think they failed", "When they stop learning from their failures", "When they're not the most talented"],
+        answer: 2,
+        book: "Sometimes You Win, Sometimes You Learn"
+      },
+      {
+        text: "What should be the main purpose of a fair legal system?",
+        options: ["To make people follow the same rules at all times", "To protect life, liberty, and property", "To help the government provide for everyone equally", "To make people more obedient"],
+        answer: 1,
+        book: "The Tuttle Twins Learn About the Law"
+      },
+      {
+        text: "How should someone respond to sudden or unexpected life changes?",
+        options: ["Wait for things to go back to normal", "Get angry about the change", "Blame others for your situation", "Adapt with courage and keep moving forward"],
+        answer: 3,
+        book: "Who Moved My Cheese for Kids"
+      },
+      {
+        text: "Why is being open to learning more important than just having natural talent?",
+        options: ["Because talent disappears over time", "Because it allows growth from failure", "Because smart people don’t fail", "Because talent is overrated by society"],
+        answer: 1,
+        book: "Sometimes You Win, Sometimes You Learn"
+      },
+      {
+        text: "Why is forgiveness an important part of any friendship?",
+        options: ["It makes you look like the better person", "It lets you control the situation", "It helps relationships heal and grow", "It ensures you don’t lose your light"],
+        answer: 2,
+        book: "Lumi the Light Learns About Friendship"
+      },
+      {
+        text: "What is a key reason why giving should be voluntary and not forced?",
+        options: ["It’s not allowed by law", "It teaches kids to be selfish", "It’s not real charity if it’s forced", "It leads to poverty"],
+        answer: 2,
+        book: "The Tuttle Twins Learn About the Law"
+      }
+    ];
+
+    const form = document.getElementById('quizForm');
+    const container = document.getElementById('quizContainer');
+    const resultDiv = document.getElementById('result');
+    const recommendationsList = document.getElementById('recommendationsList');
+
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      const qTitle = document.createElement('p');
+      qTitle.innerHTML = `<strong>Q${i + 1}:</strong> ${q.text}`;
+      div.appendChild(qTitle);
+      q.options.forEach((opt, idx) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="q${i}" value="${idx}" required> ${opt}`;
+        div.appendChild(label);
+        div.appendChild(document.createElement('br'));
+      });
+      container.appendChild(div);
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const data = new FormData(form);
+      const recommended = new Set();
+
+      questions.forEach((q, i) => {
+        const userAnswer = parseInt(data.get(`q${i}`));
+        if (userAnswer !== q.answer) {
+          recommended.add(q.book);
+        }
+      });
+
+      container.classList.add('hidden');
+      form.querySelector('button').classList.add('hidden');
+      resultDiv.classList.remove('hidden');
+      recommendationsList.innerHTML = "";
+
+      if (recommended.size === 0) {
+        recommendationsList.innerHTML = "<li>You got everything right! No additional reading needed.</li>";
+      } else {
+        recommended.forEach(book => {
+          const li = document.createElement('li');
+          li.textContent = book;
+          recommendationsList.appendChild(li);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
