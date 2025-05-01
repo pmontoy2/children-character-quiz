@@ -29,64 +29,39 @@
   <script>
     const questions = [
       {
-        text: "Jamie notices her classmate dropped their books but looks upset. What should she do to be a good friend?",
-        options: ["Ignore them and let someone else help", "Offer to help while showing kindness", "Tell them to be more careful next time", "Laugh it off to lighten the mood"],
+        text: "What should you do if someone drops their things in front of others?",
+        options: ["Wait and see what others do", "Step in and offer help kindly", "Tell them to be more careful", "Walk away quietly"],
         answer: 1,
-        book: "Lumi the Light Learns About Friendship"
+        weight: 2,
+        books: ["Lumi the Light Learns About Friendship"]
       },
       {
-        text: "Kai is nervous before performing in the school play. What thought could help him stay hopeful?",
-        options: ["If I mess up, everyone will laugh", "At least I practiced and tried my best", "I should just pretend I'm sick", "Someone else should've taken this part"],
+        text: "You feel nervous before speaking in front of a group. What thought helps most?",
+        options: ["They’ll laugh anyway", "At least I tried my best", "Someone else should do this", "Avoid eye contact and rush"],
         answer: 1,
-        book: "Lumi the Light Learns to Hope"
+        weight: 2,
+        books: ["Lumi the Light Learns to Hope", "Lumi the Light Learns to Shine"]
       },
       {
-        text: "What approach most consistently allows someone to express their unique strengths?",
-        options: ["Outperforming everyone around you", "Hiding flaws to appear perfect", "Being brave, kind, and consistently authentic", "Focusing only on peer approval"],
+        text: "What helps more in the long run?",
+        options: ["Natural talent", "Looking smart", "Learning from failure", "Avoiding challenges"],
         answer: 2,
-        book: "Lumi the Light Learns to Shine"
+        weight: 3,
+        books: ["Sometimes You Win, Sometimes You Learn"]
       },
       {
-        text: "Which statement best explains how something as simple as a pencil gets made?",
-        options: ["One person builds it from scratch", "Government planners assign tasks", "It involves many people working freely together", "Factories follow one person's exact plan"],
-        answer: 2,
-        book: "Miraculous Pencil"
-      },
-      {
-        text: "Jordan forgot their lines during a class skit. What would be a helpful response afterward?",
-        options: ["Laugh at others next time they mess up", "Give up acting forever", "Think about what went wrong and try again next time", "Tell the teacher it wasn't their fault"],
-        answer: 2,
-        book: "Sometimes You Win, Sometimes You Learn"
-      },
-      {
-        text: "What is the primary justification for having laws in a free society?",
-        options: ["To ensure everyone behaves the same way", "To maintain order through control", "To protect individual rights such as life, liberty, and property", "To allow the government to give people what they need"],
-        answer: 2,
-        book: "The Tuttle Twins Learn About the Law"
-      },
-      {
-        text: "Which response to sudden change shows a strong ability to adapt?",
-        options: ["Stick only to what's familiar", "Get frustrated and resist", "Stay flexible and find ways to move forward", "Wait until someone else tells you what to do"],
-        answer: 2,
-        book: "Who Moved My Cheese for Kids"
-      },
-      {
-        text: "Why might teachability be more beneficial long-term than raw talent?",
-        options: ["Because it leads to fewer mistakes", "Because it encourages resilience, reflection, and growth", "Because talent always fades", "Because it's easier to grade"],
+        text: "Why do people cooperate without one person in charge?",
+        options: ["To avoid mistakes", "Because of teamwork and trade", "For rewards", "To follow orders"],
         answer: 1,
-        book: "Sometimes You Win, Sometimes You Learn"
+        weight: 1,
+        books: ["Miraculous Pencil"]
       },
       {
-        text: "After a disagreement with her friend, Leila wants to make things better. What is the most constructive step she can take?",
-        options: ["Talk behind her friend's back", "Wait and see if her friend apologizes first", "Approach her friend with honesty and forgiveness", "Tell others to choose sides"],
+        text: "What makes charity meaningful?",
+        options: ["Being forced to give", "Expecting a reward", "Giving freely with purpose", "Bragging about it"],
         answer: 2,
-        book: "Lumi the Light Learns About Friendship"
-      },
-      {
-        text: "What makes voluntary giving more meaningful than being forced to give?",
-        options: ["It reflects a person's genuine care and freedom to choose", "It leads to more rewards", "It happens more often", "It proves you're better than others"],
-        answer: 0,
-        book: "The Tuttle Twins Learn About the Law"
+        weight: 2,
+        books: ["The Tuttle Twins Learn About the Law"]
       }
     ];
 
@@ -117,13 +92,15 @@
       const data = new FormData(form);
       const recommended = new Set();
       let score = 0;
+      let totalWeight = 0;
 
       questions.forEach((q, i) => {
         const userAnswer = parseInt(data.get(`q${i}`));
+        totalWeight += q.weight;
         if (userAnswer === q.answer) {
-          score++;
+          score += q.weight;
         } else {
-          recommended.add(q.book);
+          q.books.forEach(book => recommended.add(book));
         }
       });
 
@@ -131,7 +108,7 @@
       form.querySelector('button').classList.add('hidden');
       resultDiv.classList.remove('hidden');
       recommendationsList.innerHTML = "";
-      quizTitle.textContent = `Children's Character Quiz – Score: ${score}/10`;
+      quizTitle.textContent = `Children's Character Quiz – Score: ${score}/${totalWeight}`;
 
       if (recommended.size === 0) {
         recommendationsList.innerHTML = "<li>You got everything right! No additional reading needed.</li>";
